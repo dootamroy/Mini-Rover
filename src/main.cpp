@@ -12,6 +12,9 @@ char pass[] = "rocketman123";           //WIFI Password
 int speedX = 0 ;
 int speedY = 0;
 
+int turn_speedL = 0;
+int turn_speedR = 0;
+
 float voltage = 0.00;
 float vol_ratio_factor = 1.3;  //Resistors Ration Factor
 
@@ -26,6 +29,9 @@ void moveControl(int x, int y)
       digitalWrite( R_1, LOW);
       digitalWrite(R_2, LOW);
 
+      turn_speedL = 0;
+      turn_speedR = 0;
+
       Serial.println("Stop");
     }
     else
@@ -39,8 +45,8 @@ void moveControl(int x, int y)
       //MOTOR CONTROL.
       if (speedY >= 0){
         
-        int turn_speedL = speedY - speedX;
-        int turn_speedR = speedY + speedX;
+        turn_speedL = speedY - speedX;
+        turn_speedR = speedY + speedX;
 
       
         if (turn_speedL < 0)
@@ -89,8 +95,8 @@ void moveControl(int x, int y)
         //backward.
         speedY = -speedY;
 
-        int turn_speedL = speedY - speedX;
-        int turn_speedR = speedY + speedX;
+        turn_speedL = speedY - speedX;
+        turn_speedR = speedY + speedX;
 
       
         if (turn_speedL < 0)
@@ -133,10 +139,11 @@ void moveControl(int x, int y)
         digitalWrite(R_2, LOW);
 
       }
-      
     
     }
     
+        //Blynk.virtualWrite(V2, turn_speedL);
+        //Blynk.virtualWrite(V3, turn_speedR);
   
 }
 
@@ -184,7 +191,7 @@ BLYNK_WRITE(V1)
   
 }
 
-BLYNK_READ(V0){   // battery gauge.
+BLYNK_READ(V0){   // voltage gauge.
 
   float Vvalue=0.0, Rvalue=0.0;
 
@@ -204,4 +211,12 @@ BLYNK_READ(V0){   // battery gauge.
 
   //send to app.
   Blynk.virtualWrite(V0, voltage);
+}
+
+BLYNK_READ(V2){   // battery guage.
+
+int battery_level = map(voltage, 3.3, 4.2, 0, 100);
+
+//send to app.
+Blynk.virtualWrite(V0, battery_level);
 }
