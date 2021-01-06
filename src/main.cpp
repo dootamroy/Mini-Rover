@@ -201,11 +201,11 @@ BLYNK_READ(V0){   // voltage gauge.
   Vvalue=Vvalue+analogRead(BAT);         //Read analog Voltage
   delay(5);                              //ADC stable
 
-  }
-  Vvalue=(float)Vvalue/10.0;            //Find average of 10 values
-  Rvalue=(float)(Vvalue/1024.0)*3.3;      //Convert Voltage in 5v factor
+  } 
+  Vvalue = (float)Vvalue/10.0;            //Find average of 10 values
+  Rvalue = (float)(Vvalue/1024.0)*3.3;      //Convert Voltage in 3.3v factor
 
-  voltage=Rvalue*vol_ratio_factor;          //Find original voltage by multiplying with factor
+  voltage = Rvalue*vol_ratio_factor;          //Find original voltage by multiplying with factor
 
     /////////////////////////////////////Battery Voltage//////////////////////////////////
 
@@ -215,8 +215,23 @@ BLYNK_READ(V0){   // voltage gauge.
 
 BLYNK_READ(V2){   // battery guage.
 
-int battery_level = map(voltage, 3.3, 4.2, 0, 100);
+int vol = voltage;
+
+int battery_level = map(vol, 3.3, 4.2, 0, 100);
 
 //send to app.
-Blynk.virtualWrite(V0, battery_level);
+Blynk.virtualWrite(V2, battery_level);
 }
+/*
+BLYNK_READ(V){   // battery guage.
+
+//send to app.
+Blynk.virtualWrite(V0, );
+}
+
+BLYNK_READ(V){   // battery guage.
+
+//send to app.
+Blynk.virtualWrite(V0, );
+}
+*/
