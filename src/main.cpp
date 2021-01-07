@@ -18,6 +18,8 @@ int turn_speedR = 0;
 float voltage = 0.00;
 float vol_ratio_factor = 1.3;  //Resistors Ration Factor
 
+int battery_level = voltage;
+
 
 void moveControl(int x, int y)
 {
@@ -166,7 +168,28 @@ void setup() {
     digitalWrite(L_1, LOW);
 }
 
+void battery_voltage(){
+
+  float Vvalue=0.0, Rvalue=0.0;
+
+  /////////////////////////////////////Battery Voltage//////////////////////////////////  
+  for(unsigned int i=0;i<4;i++){
+    
+  Vvalue=Vvalue+analogRead(BAT);         //Read analog Voltage
+  delay(2);                              //ADC stable
+
+  } 
+  Vvalue = (float)Vvalue/4.0;            //Find average of 4 values
+  Rvalue = (float)(Vvalue/1024.0)*3.3;      //Convert Voltage in 3.3v factor
+
+  voltage = Rvalue*vol_ratio_factor;          //Find original voltage by multiplying with factor
+
+    /////////////////////////////////////Battery Voltage//////////////////////////////////
+}
+
 void loop() {
+
+  battery_voltage();  //reads the batt voltage.
 
   Blynk.run();
 
@@ -193,35 +216,22 @@ BLYNK_WRITE(V1)
 
 BLYNK_READ(V0){   // voltage gauge.
 
-  float Vvalue=0.0, Rvalue=0.0;
-
-  /////////////////////////////////////Battery Voltage//////////////////////////////////  
-  for(unsigned int i=0;i<10;i++){
-    
-  Vvalue=Vvalue+analogRead(BAT);         //Read analog Voltage
-  delay(5);                              //ADC stable
-
-  } 
-  Vvalue = (float)Vvalue/10.0;            //Find average of 10 values
-  Rvalue = (float)(Vvalue/1024.0)*3.3;      //Convert Voltage in 3.3v factor
-
-  voltage = Rvalue*vol_ratio_factor;          //Find original voltage by multiplying with factor
-
-    /////////////////////////////////////Battery Voltage//////////////////////////////////
-
-  //send to app.
+ //send to app.
   Blynk.virtualWrite(V0, voltage);
 }
 
-BLYNK_READ(V2){   // battery guage.
+BLYNK_READ(V2){   // battery % guage.
 
-int vol = voltage;
+battery_level = ((voltage - 3.0) / (4.2 - 3.0)) * 100;
 
-int battery_level = map(vol, 3.3, 4.2, 0, 100);
+    if(battery_level > 100)
+        battery_level =  100;
 
 //send to app.
 Blynk.virtualWrite(V2, battery_level);
 }
+
+
 /*
 BLYNK_READ(V){   // battery guage.
 
