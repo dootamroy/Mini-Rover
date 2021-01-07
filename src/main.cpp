@@ -176,7 +176,7 @@ void battery_voltage(){
   for(unsigned int i=0;i<4;i++){
     
   Vvalue=Vvalue+analogRead(BAT);         //Read analog Voltage
-  delay(2);                              //ADC stable
+  delay(1);                              //ADC stable
 
   } 
   Vvalue = (float)Vvalue/4.0;            //Find average of 4 values
@@ -232,16 +232,50 @@ Blynk.virtualWrite(V2, battery_level);
 }
 
 
-/*
-BLYNK_READ(V){   // battery guage.
 
-//send to app.
-Blynk.virtualWrite(V0, );
+BLYNK_WRITE(V3){   // CW rotation.
+
+int buttonState = param.asInt();
+
+if (buttonState == HIGH)
+{
+        analogWrite(L_2, 1000);
+        digitalWrite(L_1, LOW);
+        analogWrite(R_1, 1000);
+        digitalWrite(R_2, LOW);
+
+}
+else
+{
+      digitalWrite(L_1, LOW);
+      digitalWrite(L_2 , LOW);
+      digitalWrite( R_1, LOW);
+      digitalWrite(R_2, LOW);
 }
 
-BLYNK_READ(V){   // battery guage.
 
-//send to app.
-Blynk.virtualWrite(V0, );
+
 }
-*/
+
+BLYNK_WRITE(V4){   // CCW rotation.
+
+int buttonState = param.asInt();
+
+if (buttonState == HIGH)
+{
+        analogWrite(L_1, 1000);
+        digitalWrite(L_2, LOW);
+        analogWrite(R_2, 1000);
+        digitalWrite(R_1, LOW);
+
+}
+else
+{
+      digitalWrite(L_1, LOW);
+      digitalWrite(L_2 , LOW);
+      digitalWrite( R_1, LOW);
+      digitalWrite(R_2, LOW);
+}
+
+}
+
