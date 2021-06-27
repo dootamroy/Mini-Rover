@@ -166,6 +166,20 @@ void setup() {
     digitalWrite(R_1 , LOW);
     digitalWrite( L_2, LOW);
     digitalWrite(L_1, LOW);
+
+   Servo1.attach(D7); //D7
+   Servo2.attach(D8); //D7
+
+  Servo1.setSpeed(10);
+  Servo2.setSpeed(10);
+
+   Servo1.write(170);
+   delay(20);
+
+   Servo2.write(170);
+   delay(20);
+
+
 }
 
 void battery_voltage(){
@@ -276,6 +290,20 @@ else
       digitalWrite( R_1, LOW);
       digitalWrite(R_2, LOW);
 }
+
+}
+
+BLYNK_WRITE(V10){
+
+int slider = param.asInt();
+
+slider = map(slider, 0, 1023, 170, 90);
+
+Servo1.write(slider);
+   delay(20);
+Servo2.write(slider);
+   delay(20);
+
 
 }
 

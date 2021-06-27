@@ -6,6 +6,11 @@
 
 #include <BlynkSimpleEsp8266.h>
 
+#include "ServoEasing.h"
+
+ServoEasing Servo1;
+ServoEasing Servo2;
+
 
 // Macro definition.
 
@@ -23,3 +28,7 @@
 #define maxSpeed 1024
 
 //#define midPoint 512
+
+
+#define arm_1       D7
+#define arm_2       D8
